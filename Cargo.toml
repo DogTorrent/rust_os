@@ -9,6 +9,8 @@ edition = "2018"
 [dependencies]
 rlibc = "1.0.0"
 bootloader = "0.9.8"
+volatile = "0.2.6"
+spin = "0.4.9"
 
 # Abort on panic to disabled stack unwinding
 [profile.dev]
@@ -16,3 +18,7 @@ panic = "abort"
 
 [profile.release]
 panic = "abort"
+
+[dependencies.lazy_static]
+version = "1.0"
+features = ["spin_no_std"]
