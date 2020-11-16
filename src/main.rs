@@ -1,27 +1,25 @@
 #![no_std]
 #![no_main]
 #![feature(custom_test_frameworks)]
-#![test_runner(crate::test_runner)]
+#![test_runner(rust_os::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
 use core::panic::PanicInfo;
+use rust_os::println;
 
-mod vga_buffer; // Create a Rust module to handle printing
-
-/// This function is called on panic
+/// This function is called on panic(not test mode)
+#[cfg(not(test))] 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
     loop {}
 }
 
-// This function is the entry function of test framework
+/// This function is called on panic(test mode)
 #[cfg(test)]
-fn test_runner(tests: &[&dyn Fn()]) {
-    println!("Running {} tests", tests.len());
-    for test in tests {
-        test();
-    }
+#[panic_handler]
+fn panic(info: &PanicInfo) -> ! {
+    rust_os::test_panic_handler(info)
 }
 
 /// This function is the entry point
@@ -29,8 +27,11 @@ fn test_runner(tests: &[&dyn Fn()]) {
 pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
 
-    #[cfg(test)]
-    test_main();
-
     loop{}
 }
+
+#[test_case]
+fn trivial_assertion() {
+    assert_eq!(1, 1);
+}
+
