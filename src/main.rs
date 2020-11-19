@@ -27,9 +27,6 @@ fn panic(info: &PanicInfo) -> ! {
 pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
 
-    #[cfg(test)]
-    test_main();
-    
     loop{}
 }
 
