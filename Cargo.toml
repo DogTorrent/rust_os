@@ -8,25 +8,17 @@ edition = "2018"
 
 [dependencies]
 rlibc = "1.0.0"
-bootloader = "0.9.11"
 volatile = "0.2.6"
 spin = "0.4.9"
-x86_64 = "0.12.1"
-uart_16550 = "0.2.0"
 
-# Abort on panic to disabled stack unwinding (Disabled because of https://github.com/rust-lang/cargo/issues/7359)
-# [profile.dev]
-# panic = "abort"
-
-# [profile.release]
-# panic = "abort"
+[target.'cfg(target_arch = "aarch64")'.dependencies]
+#aarch64 = "0.0.4"
+#bcm2837 = "0.1.0"
+aarch64 = { git = "https://github.com/rcore-os/aarch64", version = "3.0.1" }
+bcm2837 = { git = "https://github.com/rcore-os/bcm2837", version = "2.5.1", optional = true }
 
 [dependencies.lazy_static]
 version = "1.0"
 features = ["spin_no_std"]
 
-[package.metadata.bootimage]
-# `iobase` and `iosize` specify the I/O port through which the device can be reached from the kernel.
-test-args = ["-device", "isa-debug-exit,iobase=0xf4,iosize=0x04", "-serial", "stdio", "-display", "none"]
-test-success-exit-code = 33         # (0x10 << 1) | 1
-test-timeout = 300          # (in seconds)
+
